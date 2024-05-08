@@ -40,7 +40,7 @@ function App() {
       method: 'POST',
       headers,
       body: JSON.stringify({
-        "isEmailLogin": true,
+        "isEmailLogin": data.isEmailLogin,
         "code": data.code,
         "phone": data.phone,
         "email": data.email,
