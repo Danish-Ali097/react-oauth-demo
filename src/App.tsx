@@ -15,6 +15,9 @@ function App() {
     email: "",
     password: ""
   })
+  const _url = import.meta.env.VITE_BASE_URL;
+  const _basic_user_name = import.meta.env.VITE_BASIC_USER;
+  const _basic_pass = import.meta.env.VITE_BASIC_PASS;
 
   const handleChange = (e: React.FormEvent<HTMLInputElement>) => {
     const { name, value, checked } = e.currentTarget
@@ -34,7 +37,7 @@ function App() {
   const handleSignIn = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     let headers = new Headers();
-    headers.append('Authorization', 'Basic ' + btoa("modl_app_user:6qfxSkl9yO"))
+    headers.append('Authorization', 'Basic ' + btoa(_basic_user_name + ":" + _basic_pass))
     headers.append('Content-Type', 'application/json')
     let options = {
       method: 'POST',
@@ -47,7 +50,8 @@ function App() {
         "password": data.password
       })
     };
-    fetch("https://localhost:44363/api/User/Login", options)
+    
+    fetch(_url + "/api/User/Login", options)
       .then(r => {
         console.log(r.json());
       })
@@ -55,15 +59,22 @@ function App() {
   }
 
   const handleGoogleLogin = useGoogleLogin({
-    flow: 'auth-code',
-    scope: 'https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email',
     onSuccess(tokenResponse) {
       console.log('google token resp', tokenResponse);
+      let headers = new Headers();
+      headers.append('Authorization', 'Basic ' + btoa(_basic_user_name + ":" + _basic_pass));
+
+      fetch(_url + "/api/User/ExchangeGoogleToken?accessToken=" + tokenResponse.access_token, { headers })
+        .then(r => {
+          console.log(r.json());
+        })
+        .catch(e => console.log(e));
     },
     onError(errorResponse) {
       console.log('google error', errorResponse);
     },
-  })
+  });
+
   const handleInstaLogin = () => { }
   const handleAppleLogin = () => { }
 
