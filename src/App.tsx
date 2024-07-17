@@ -36,10 +36,10 @@ function App() {
 
   const handleSignIn = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    let headers = new Headers();
+    const headers = new Headers();
     headers.append('Authorization', 'Basic ' + btoa(_basic_user_name + ":" + _basic_pass))
     headers.append('Content-Type', 'application/json')
-    let options = {
+    const options = {
       method: 'POST',
       headers,
       body: JSON.stringify({
@@ -61,7 +61,7 @@ function App() {
   const handleGoogleLogin = useGoogleLogin({
     onSuccess(tokenResponse) {
       console.log('google token resp', tokenResponse);
-      let headers = new Headers();
+      const headers = new Headers();
       headers.append('Authorization', 'Basic ' + btoa(_basic_user_name + ":" + _basic_pass));
 
       fetch(_url + "/api/User/ExchangeGoogleToken?accessToken=" + tokenResponse.access_token, { headers })
